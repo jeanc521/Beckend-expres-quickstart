@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "../../generated/prisma";
-import { create } from "domain";
+
 
 const prisma = new PrismaClient()
 
@@ -8,5 +8,22 @@ export default{
     create : async(req: Request, res: Response) => {
         const list = await prisma.list.create({data: req.body})
         return res.status(201).json(list)
-    }
+    },
+
+    read : async(req: Request, res: Response) => {
+        const list = await prisma.list.findMany({select : {id: true, description: true, price: true, quanity: true, image: true}})
+        return res.status(200).json(list)
+    },
+
+    update : async(req: Request, res: Response) => {
+        const id = req.params.id
+        const list = await prisma.user.update({data: req.body, where: {id: + id}})
+        return res.status(200).json(list)
+    },
+
+    delete: async(req: Request, res: Response) => {
+        const id = req.params.id
+        const list = await prisma.list.delete({where: {id: + id}})
+        return res.status(200).json(list)
+    },
 }
